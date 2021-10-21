@@ -1,0 +1,58 @@
+{#
+# Copyright 2019 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Photobooth</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <section class="hero is-info">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            <i class="fas fa-image"></i> &nbsp;
+            Photobooth
+          </h1>
+        </div>
+      </div>
+          <nav class="navbar has-background-dark" role="navigation" aria-label="main navigation">
+              <div class="navbar-menu">
+                  <a class="navbar-item has-text-white" href="/">
+                      <i class="fas fa-home"></i> &nbsp;
+                      Photos
+                  </a>
+                  <!-- <a class="navbar-item has-text-white" href="/edit.html">
+                      <i class="fas fa-cubes"></i> &nbsp;
+                      Edit
+                  </a> -->
+                  <a class="navbar-item has-text-white" href="/photos/add">
+                      <i class="fas fa-upload"></i> &nbsp;
+                      Upload
+                  </a>
+              </div>
+            </nav>
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+    {{user}}
+  </body>
+</html>
+

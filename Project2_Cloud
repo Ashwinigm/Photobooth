@@ -1,0 +1,375 @@
+diff --git a/frontend/app.yaml b/frontend/app.yaml
+index 6c68b72..a41a9a4 100644
+--- a/frontend/app.yaml
++++ b/frontend/app.yaml
+@@ -14,5 +14,5 @@
+
+ runtime: nodejs10
+ env_variables:
+-  BUCKET_PICTURES: uploaded-pictures-GOOGLE_CLOUD_PROJECT
+-  BUCKET_THUMBNAILS: thumbnails-GOOGLE_CLOUD_PROJECT
++  BUCKET_PICTURES: uploaded-pictures-store-and-analyze-pic
++  BUCKET_THUMBNAILS: thumbnails-store-and-analyze-pic
+diff --git a/frontend/index.js b/frontend/index.js
+index e82055f..388a5f2 100644
+--- a/frontend/index.js
++++ b/frontend/index.js
+@@ -20,6 +20,7 @@ const storage = new Storage();
+ const path = require('path');
+ const dayjs = require('dayjs');
+ const relativeTime = require('dayjs/plugin/relativeTime')
++const FormData = require('form-data')
+ dayjs.extend(relativeTime)
+
+ const app = express();
+@@ -32,6 +33,12 @@ app.use(fileUpload({
+
+ app.post('/api/pictures', async (req, res) => {
+     if (!req.files || Object.keys(req.files).length === 0) {
++        var formData = FormData("upload")
++        // console.log(`Receiving photographer ${JSON.stringify(req.files.photographer)}`);
++        // This is where every metadat is
++        console.log(`Receiving request ${JSON.stringify(req.body)}`);
++
++        // console.log(`Receiving dated ${JSON.stringify(req.files.dated)}`);
+         console.log("No file uploaded");
+         return res.status(400).send('No file was uploaded.');
+     }
+@@ -42,7 +49,17 @@ app.post('/api/pictures', async (req, res) => {
+     console.log('File moved in temporary directory');
+
+     const pictureBucket = storage.bucket(process.env.BUCKET_PICTURES);
+-    await pictureBucket.upload(newPicture, { resumable: false });
++    await pictureBucket.upload(newPicture, { resumable: false },);
++    //  Adding metadat about picture
++    // location, dated, photographer
++    const pictureStore = new Firestore().collection('pictures');
++        const doc = pictureStore.doc(req.files.picture.name);
++            await doc.set({
++                location: req.body.location,
++                photographer: req.body.photographer,
++                dated: req.body.dated
++            }, {merge: true});
++
+     console.log("Uploaded new picture into Cloud Storage");
+
+     res.redirect('/');
+@@ -50,30 +67,79 @@ app.post('/api/pictures', async (req, res) => {
+
+ app.get('/api/pictures', async (req, res) => {
+     console.log('Retrieving list of pictures');
+-
+-    const thumbnails = [];
++    var allPhotos = {'Animal': [],
++                     'Flower': [],
++                     'People': [],
++                     'Others': []};
++    // const thumbnails = [];
++    // var typeOfImage = "Other";
+     const pictureStore = new Firestore().collection('pictures');
+     const snapshot = await pictureStore
+         .where('thumbnail', '==', true)
+-        .orderBy('created', 'desc').get();
++        .orderBy('dated', 'desc').get();
+
+     if (snapshot.empty) {
+         console.log('No pictures found');
+     } else {
+         snapshot.forEach(doc => {
+             const pic = doc.data();
+-            thumbnails.push({
+-                name: doc.id,
+-                labels: pic.labels,
+-                color: pic.color,
+-                created: dayjs(pic.created.toDate()).fromNow()
+-            });
++            var labels = pic.labels
++
++            var category = findCategory(labels)
++            if (category === 'flower') {
++                allPhotos['Flower'].push({
++                    name: doc.id,
++                    labels: pic.labels,
++                    color: pic.color,
++                    created: dayjs(pic.created.toDate()).fromNow(),
++                    date: pic.dated,
++                    photographer: pic.photographer,
++                    location: pic.location,
++                });
++            } else if (category === 'animal') {
++                allPhotos['Animal'].push({
++                    name: doc.id,
++                    labels: pic.labels,
++                    color: pic.color,
++                    created: dayjs(pic.created.toDate()).fromNow(),
++                    date: pic.dated,
++                    photographer: pic.photographer,
++                    location: pic.location,
++                });
++            } else if (category === 'human') {
++                allPhotos['People'].push({
++                    name: doc.id,
++                    labels: pic.labels,
++                    color: pic.color,
++                    created: dayjs(pic.created.toDate()).fromNow(),
++                    date: pic.dated,
++                    photographer: pic.photographer,
++                    location: pic.location,
++                });
++            } else {
++                allPhotos['Others'].push({
++                    name: doc.id,
++                    labels: pic.labels,
++                    color: pic.color,
++                    created: dayjs(pic.created.toDate()).fromNow(),
++                    date: pic.dated,
++                    photographer: pic.photographer,
++                    location: pic.location,
++                });
++            }
++
+         });
+     }
+-    console.table(thumbnails);
+-    res.send(thumbnails);
++    for (const [key, value] of Object.entries(allPhotos)){
++        console.log(key)
++        console.table(value);
++    };
++
++
++    res.send(allPhotos);
+ });
+
++
+ app.get('/api/pictures/:name', (req, res) => {
+     res.redirect(`https://storage.googleapis.com/${process.env.BUCKET_PICTURES}/${req.params.name}`);
+ });
+@@ -94,3 +160,47 @@ app.listen(PORT, () => {
+     console.log(`- Pictures bucket = ${process.env.BUCKET_PICTURES}`);
+     console.log(`- Thumbnails bucket = ${process.env.BUCKET_THUMBNAILS}`);
+ });
++const human_identifiers = ['person', 'human', 'people', ]
++const animal_identifier = ['animal', 'cat', 'dog', 'amphibians', 'fish', 'reptiles', 'arthopoda', 'invertebrates']
++const flower_identifier = ['flower']
++const identifier = {'animal': animal_identifier,
++                    'human': human_identifiers,
++                    'flower': flower_identifier}
++
++function findCategory(labels) {
++    var category = "Others"
++    var found = false
++    var tmp = []
++    labels.forEach( label =>
++        tmp.push(label.toLowerCase())
++    )
++    tmp_length = tmp.length
++    for (var i=0; i < tmp_length; i++) {
++        label = tmp['i']
++        console.log(label)
++        var lowercaseLabel = label.toLowerCase()
++
++        console.log(lowercaseLabel)
++
++        for (const [key, value] of Object.entries(identifier)){
++            console.log(key)
++            for (item in value){
++                if (lowercaseLabel.includes(item)) {
++                    category = key
++                    found = true
++                    break
++                }
++            }
++            if (found) {
++                break
++            }
++        };
++        if (found) {
++                break
++        }
++
++    }
++
++    return category
++
++}
+\ No newline at end of file
+diff --git a/frontend/package.json b/frontend/package.json
+index b4bfc0e..5597e07 100644
+--- a/frontend/package.json
++++ b/frontend/package.json
+@@ -10,6 +10,7 @@
+     "@google-cloud/storage": "^5.8.5",
+     "dayjs": "^1.8.22",
+     "express": "^4.16.4",
+-    "express-fileupload": "^1.1.6"
++    "express-fileupload": "^1.1.6",
++    "form-data": "^4.0.0"
+   }
+ }
+diff --git a/frontend/public/collage.html b/frontend/public/collage.html
+index 8c4a189..e5389e4 100644
+--- a/frontend/public/collage.html
++++ b/frontend/public/collage.html
+@@ -20,7 +20,7 @@
+ <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+-       <title>Pic-a-Daily Serverless Workshop</title>
++       <title>PhotoBooth</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+        <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+@@ -34,7 +34,7 @@
+                        <div class="container">
+                                <h1 class="title">
+                                        <i class="fas fa-image"></i> &nbsp;
+-                                       Pic-a-Daily Serverless Workshop
++                                       PhotoBooth
+                                </h1>
+                        </div>
+                </div>
+diff --git a/frontend/public/index.html b/frontend/public/index.html
+index 6eeae00..ab8b501 100644
+--- a/frontend/public/index.html
++++ b/frontend/public/index.html
+@@ -20,7 +20,7 @@
+ <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+-       <title>Pic-a-Daily Serverless Workshop</title>
++       <title>Photobooth</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+        <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+@@ -34,7 +34,7 @@
+                        <div class="container">
+                                <h1 class="title">
+                                        <i class="fas fa-image"></i> &nbsp;
+-                                       Pic-a-Daily Serverless Workshop
++                                       Photobooth
+                                </h1>
+                        </div>
+                </div>
+@@ -42,7 +42,7 @@
+             <div class="navbar-menu">
+                 <a class="navbar-item has-text-white" href="/">
+                     <i class="fas fa-home"></i> &nbsp;
+-                    Home
++                    My Photobooth
+                 </a>
+                 <a class="navbar-item has-text-white" href="/collage.html">
+                     <i class="fas fa-cubes"></i> &nbsp;
+@@ -58,8 +58,10 @@
+
+        <section class="section">
+                <div class="container" id="app">
+-                       <div class="columns" v-for="n in Math.ceil(pictures.length / 4)">
+-                               <div class="column is-one-quarter" v-for="pic in pictures.slice((n-1) * 4, n * 4)">
++            <div v-for="(thumbnails , key) in pictures" :key="key">
++                <h3>{{ key }}</h3>
++                       <div class="columns" v-for="n in Math.ceil(thumbnails.length / 4)">
++                               <div class="column is-one-quarter" v-for="pic in thumbnails.slice((n-1) * 4, n * 4)">
+                                        <div class="card">
+                                                <div class="card-content">
+                                                        <div class="content">
+diff --git a/frontend/public/upload.html b/frontend/public/upload.html
+index fa5af0a..f87ac49 100644
+--- a/frontend/public/upload.html
++++ b/frontend/public/upload.html
+@@ -14,13 +14,12 @@
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ -->
+-
+ <html>
+
+ <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+-       <title>Pic-a-Daily Serverless Workshop</title>
++       <title>Photobooth</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+        <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+@@ -34,7 +33,7 @@
+                        <div class="container">
+                                <h1 class="title">
+                                        <i class="fas fa-image"></i> &nbsp;
+-                                       Pic-a-Daily Serverless Workshop
++                                       Photobooth
+                                </h1>
+                        </div>
+                </div>
+@@ -58,8 +57,40 @@
+
+        <section class="section">
+                <div class="container" id="upload">
+-            <form method="POST" action="/api/pictures" enctype="multipart/form-data">
+-                <div class="field">
++            <form method="POST" action="/api/pictures" enctype="multipart/form-data" name="upload">
++
++                <div class="field is-vertical">
++                    <div class="field-label is-left">
++                        <label class="label">Photographer</label>
++                    </div>
++                    <div class="field-body">
++                        <div class="field">
++                        <p class="control">
++                            <input class="input" name="photographer" type="text">
++                        </p>
++                        </div>
++                    </div>
++                    <div class="field-label is-left">
++                        <label class="label">Location</label>
++                    </div>
++                    <div class="field-body">
++                        <div class="field">
++                        <p class="control">
++                            <input class="input" name="location" type="text">
++                        </p>
++                        </div>
++                    </div>
++                    <div class="field-label is-normal">
++                        <label class="label is-left">Dated</label>
++                    </div>
++                    <div class="field-body">
++                        <div class="field">
++                        <p class="control">
++                            <input class="input" name="dated" type="date">
++                        </p>
++                        </div>
++                    </div>
++
+                     <div id="file-js-example" class="file is-boxed has-name">
+                         <label class="file-label">
+                             <input class="file-input" type="file" name="picture">
+@@ -82,12 +113,15 @@
+                     </div>
+                 </div>
+             </form>
++
++            <form method="POST" enctype="multipart/form-data">
++
+                </div>
+        </section>
+
+        <script>
+        // https://bulma.io/documentation/form/file/#javascript
+-       const fileInput = document.querySelector('#file-js-example input[type=file]');
++    const fileInput = document.querySelector('#file-js-example input[type=file]');
+        fileInput.onchange = () => {
+          if (fileInput.files.length > 0) {
+            const fileName = document.querySelector('#file-js-example .file-name');
+diff --git a/services/thumbnails/nodejs/index.js b/services/thumbnails/nodejs/index.js
+index 9384d0c..8cd5806 100644
+--- a/services/thumbnails/nodejs/index.js
++++ b/services/thumbnails/nodejs/index.js
+@@ -41,6 +41,7 @@ app.post('/', async (req, res) => {
+
+         const storage = new Storage();
+         const bucket = storage.bucket(fileEvent.bucket);
++        console.log(`Keshav Bucket name here is ${process.env.BUCKET_THUMBNAILS}`)
+         const thumbBucket = storage.bucket(process.env.BUCKET_THUMBNAILS);
+
+         const originalFile = path.resolve('/tmp/original', fileEvent.name);
