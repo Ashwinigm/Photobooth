@@ -23,34 +23,35 @@
 
     <div class="wrapper">
         {% for key, value in photos.items() %}
-            <h2>Category: {{key}}</h2>
+            <h2>{{key}}</h2>
             <div class="card_wrapper">
                 {% for photo in value %}
                 <div class="card_item">
-                    <div class="card_inner">
+                    <div class="h-100 w-100">
                         <a href="/photos/{{photo.id}}">
-                            <div class="card_top">
+                            <div class = "card bg-dark">
+                                <div class="center">
                                 {% if photo.thumbnailUrl %}
-                                    <img src="{{photo.thumbnailUrl}}" style="width: 100px;">
+                                    <img src="{{photo.imageUrl}}" class = "center" style="width: 100px;">
                                 {% else %}
-                                    <img src="{{photo.imageUrl}}" style="width: 100px;">
+                                    <img src="{{photo.imageUrl}}" class = "center" style="width: 100px;">
                                 {% endif %}
-                            </div>
-                            <div class="card_bottom">
-                                <p><h4>Name</h4>         {{photo.title}}</h4>
-                                <p><h4>Photographer</h4> {{photo.photographer}}</p>
-                                <p><h4>Location</h4>     {{photo.location}}</p>
-                                <p><h4>Date Taken</h4>   {{photo.takenDate}}</p>
-                                <p><h4>Labels</h4>   {{photo.labels}}</p>
+                            </div></div>
+                            <div class="card bg-light">
+                                <p><h2> {{photo.title}}</h2>
+                                <h4>Photographer: {{photo.photographer}}</h4>
+                                <h4>Location: {{photo.location}}</h4></p>
+                                <h4>Date Taken: {{photo.takenDate}}</h4></p>
                             </div>
                         </a>
                     </div>
                 </div>
                 {% else %}
-                <p>No photos found</p>
+                <p>No photos</p>
                 {% endfor %}
             </div>
         {% endfor %}
+        
     </div>
 
 <style>

@@ -30,14 +30,14 @@
   Add photo
 </a>
 
-{% for photo in photos %}
+{% for photo in photosß %}
 <div class="media">
   <a href="/photos/{{photo.id}}">
     <div class="media-left">
       {% if photo.imageUrl %}
         <img src="{{photo.imageUrl}}">
       {% else %}
-        <img src="https://placekitten.com/g/128/192">
+        <img src="{{photo.imageUrl}}">
       {% endif %}
     </div>
     <div class="media-body">

@@ -63,7 +63,7 @@ if not app.testing:
 
 
 # @app.route('/')
-# def list():
+# def list():   
 #     start_after = request.args.get('start_after', None)
 #     photos, last_title = firestore.next_page(start_after=start_after)
 
@@ -77,7 +77,7 @@ def fetch_all_photos():
 @app.route('/photos/<photo_id>')
 def view(photo_id):
     photo = firestore.read(photo_id)
-    print("Keshav PhotoID here is ")
+    print("PhotoID here is ")
     return render_template('view.html', photo=photo)
 
 
@@ -95,7 +95,7 @@ def add():
             image_name = image_url.split('/')[-1]
 
         photo = firestore.create(data, photo_id=image_name)
-        print(f"Keshav photo here {photo}")
+        print(f"Photo here {photo}")
 
         return redirect(url_for('fetch_all_photos'))
 
@@ -125,7 +125,7 @@ def edit(photo_id):
 @app.route('/photos/<photo_id>/delete')
 def delete(photo_id):
     firestore.delete(photo_id)
-    return redirect(url_for('.list'))
+    return redirect(url_for('.logs'))
 
 
 @app.route('/logs')
@@ -133,7 +133,7 @@ def logs():
     logging.info('Hey, you triggered a custom log entry. Good job!')
     flash(Markup('''You triggered a custom log entry. You can view it in the
         <a href="https://console.cloud.google.com/logs">Cloud Console</a>'''))
-    return redirect(url_for('.list'))
+    return redirect(url_for('.logs'))
 
 
 @app.route('/errors')

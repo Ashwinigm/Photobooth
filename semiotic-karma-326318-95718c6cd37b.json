@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "semiotic-karma-326318",
+  "private_key_id": "95718c6cd37b393a5bfa75aa738a71315b96d08c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCoQqjAhxydBXwz\nYhTyXae7tdohP/IrIOZYZpOjERRHtt5YeT5aBJphOxv6H28QKMrACe35eZpLVX/u\nXUdzpg+o30ijLeGxQWUmmRXN5yOEBry2wBQBxDgCnRsNtk6Nq8Cybc90B71XCzuV\nuRbkyKMtkvpz8l+bhXhwZca3oFBsTNe7N3gqcehzusx1SKJH5JtnREhi7kwcqCol\nqjNYZkzRcxlUWb0rdFJw4UM7JQAXkvc9BRvaYKNKDnI94orjF5+1+ldLZfwVZHMv\nITLAGzn5oQ2qRJpft8jriRy9+wmdGsJXWGBPuycP+mgMX5lnAhS08LLLrPG3uH1o\nLQOUv8E7AgMBAAECggEAAMGD6NqpZYhWohPkTHwpzOQ6+RJpL/eO3xQ6Uv/vW4hD\nyXUcRZnUjN3Y+Qsf91MMKZD9SEd/uGKi8u1W7PsVSzZ/38GDujMi3nvzlLKEI1S0\n/TExuBoG24i4TEB4/iiEFz/6wi+wbe4b/SJaKvpjNLbH5iAGM+9g20hpxWtrY1yX\nJXKS2LyhGt6RDg8ERsC3sJagWhhg01WfCBwBkP/W7LQC8sXbyh+5BO3+lFbJsOFF\nQy0qfsp0fu9ApYkDzSmqn7s4KblZIoKdfW41w8HlTQHXO7yvgSPoxAElIe+ZfUO7\nKx8RIrhNZApCOxHeBcg1tt0+yeaK1duaY7lWBA0MGQKBgQDfHjBeyNIOHLizhftf\nG92wDduH8TZYkn5bkW00sdhIhwP984RNreEuL6aM7GrDEyBbBBYAATC0QiGqU5pP\nlW2prmIS5ifPuNmXB6Q6Rz0AJAJZTPDnPDdmPJjSs30N5LC3/bjTBqjsmIxK73Yp\nsXBrb+oYD+NSHo5RuYxOYrZbpwKBgQDBDsz19aS14ojux72BugGQ59p1Cpvyy7sw\nUcCRdsDC2zIsdV9RclKs8PoNVpsoz7D3AUmSYjxaocsccHn/B9KjtELG/bPso88N\nTWKXnY6uDoKMPRo6bqmU0M1EQcAw4HeTXAbrv0/9Th+/yviiUd+bavIJ5nob9XH/\njRSy/u5QTQKBgQDJWK8B+mxFO/oaWACetcD7TaYdKbqHd7v72mMYuJ2b5eveUtHE\nX/PkADBm4DsAS9RZDnjkDC7tnPhQgx2wUAMkqy/qKjUnKYOC3eyAgyUzaUuNVvfX\nVOoRowGuszdZQFWR1K/kEBCFYqzIOw0BVxVCfz5b9IqJ4vVAHxfU7RPv5QKBgQCZ\nUzjiqrmqnoSkJ0xRiDmQLSNpywg51yYOZQ8sOAU1fEKn3nvaQpJ4uVXOXBcUXYat\nVX9p280VKeQW7Rlmu37F9vcF9R39dceOSARiZ4aWo/14hVqcR6E1CHPNnu6VouA0\nz2TLvIA5q985Qmke+Sk+1LvvsvUN2Ww1SoXC9wasDQKBgQCAWbj0Vto42keVTGZY\n4hS3u4uoIUEMki/gAQYaAhC257sfxeAUV/gojfwkY0XpgPmd/9nO9Y2u7FyWHGIm\nFvrcoLGWD4j7ui2G7o9BsKxnlyAeOZcD5pDf1A41+hmQlm9E+tFvX65XrWhrmW19\nCXSEb/mKbdoWimCibP5jPjJJsg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "photo-upload@semiotic-karma-326318.iam.gserviceaccount.com",
+  "client_id": "105827124852319628003",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/photo-upload%40semiotic-karma-326318.iam.gserviceaccount.com"
+}

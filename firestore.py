@@ -29,7 +29,7 @@ def document_to_dict(doc):
 def next_page(limit=10, start_after=None):
     db = firestore.Client()
 
-    query = db.collection(u'Photo').limit(limit).order_by(u'title')
+    query = db.collection(u'pictures').limit(limit).order_by(u'title')
 
     if start_after:
         # Construct a new query starting at this document.
@@ -48,7 +48,7 @@ def next_page(limit=10, start_after=None):
 def read(photo_id):
     # [START photobooth_firestore_client]
     db = firestore.Client()
-    photo_ref = db.collection(u'Photo').document(photo_id)
+    photo_ref = db.collection(u'pictures').document(photo_id)
     snapshot = photo_ref.get()
     # [END photobooth_firestore_client]
     return document_to_dict(snapshot)
@@ -56,7 +56,7 @@ def read(photo_id):
 
 def update(data, photo_id=None):
     db = firestore.Client()
-    photo_ref = db.collection(u'Photo').document(photo_id)
+    photo_ref = db.collection(u'pictures').document(photo_id)
     photo_ref.set(data)
     return document_to_dict(photo_ref.get())
 
@@ -66,7 +66,7 @@ create = update
 
 def delete(id):
     db = firestore.Client()
-    photo_ref = db.collection(u'Photo').document(id)
+    photo_ref = db.collection(u'pictures').document(id)
     photo_ref.delete()
 
 HUMANS = ['person', 'human', 'people', 'smile', 'eyebrow']
@@ -114,7 +114,7 @@ def fetch_all_photos():
     db = firestore.Client()
     final_response = {'Animals': [], 'Flowers': [], 'Others': [], 'Humans': []}
 
-    query = db.collection(u'Photo').order_by(u'title')
+    query = db.collection(u'pictures').order_by(u'title')
     docs = query.stream()
     docs = list(map(document_to_dict, docs))
     for doc in docs:

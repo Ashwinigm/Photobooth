@@ -17,38 +17,46 @@
 <html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Photobooth</title>
+    <title>PHOTOBOOK APPLICATION </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <a class="navbar-item has-text-white" style="color: #FFFFFF" href="/">
+                <i class="fas fa-home"></i> &nbsp;
+                All Photos
+            </a>
+          <!-- <a class="navbar-item has-text-white" href="/edit.html">
+              <i class="fas fa-cubes"></i> &nbsp;
+              Edit
+          </a> -->
+          <a class="navbar-item has-text-white" style="color: #FFFFFF" href="/photos/add">
+              <i class="fas fa-upload"></i> &nbsp;
+              Upload
+          </a>
+      </div>
+    </nav>
+    <style>
+      h1 {text-align: center;}
+    </style>
     <section class="hero is-info">
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
             <i class="fas fa-image"></i> &nbsp;
-            Photobooth
+            PHOTOBOOK APPLICATION
           </h1>
         </div>
       </div>
-          <nav class="navbar has-background-dark" role="navigation" aria-label="main navigation">
-              <div class="navbar-menu">
-                  <a class="navbar-item has-text-white" href="/">
-                      <i class="fas fa-home"></i> &nbsp;
-                      Photos
-                  </a>
-                  <!-- <a class="navbar-item has-text-white" href="/edit.html">
-                      <i class="fas fa-cubes"></i> &nbsp;
-                      Edit
-                  </a> -->
-                  <a class="navbar-item has-text-white" href="/photos/add">
-                      <i class="fas fa-upload"></i> &nbsp;
-                      Upload
-                  </a>
-              </div>
-            </nav>
+          
     <div class="container">
       {% block content %}{% endblock %}
     </div>
